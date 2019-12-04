@@ -6,5 +6,5 @@ calcFuel n
 
 main = do
      input <- readFile "input.txt"
-     let weights = map read (lines s) :: [Int]
+     let weights = map read (lines input) :: [Int]
      putStrLn $ show (sum (map calcFuel weights))
