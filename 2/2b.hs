@@ -1,8 +1,8 @@
 {-# LANGUAGE DataKinds #-}
-import  Data.Sequence(update,index, fromList, Seq)
+import           Data.List       (find)
 import           Data.List.Split
-import           Data.List(find)
-import qualified Data.Text as T
+import           Data.Sequence   (Seq, fromList, index, update)
+import qualified Data.Text       as T
 
 -- Day 2: Intcode Interpreter
 
@@ -10,7 +10,7 @@ import qualified Data.Text as T
 interp :: Seq Int -> Int -> Seq Int
 interp prog pc
     | opcd == 1 = interp(update arg3 (val1 + val2) prog) (pc + 4)
-    | opcd == 2 = interp(update arg3 (val1 * val2) prog) (pc + 4) 
+    | opcd == 2 = interp(update arg3 (val1 * val2) prog) (pc + 4)
     | otherwise = prog -- finish execution and return program
     where opcd = index prog pc :: Int
           arg1 = index prog (pc+1) :: Int
@@ -33,13 +33,13 @@ run prog = interp prog 0
 main = do
      input <- readFile "input.txt"
      let program = fromList (map read (splitOn "," (T.unpack $ T.strip $ T.pack input))) :: Seq Int
-     
+
      let inputCombinations = [(noun,verb) | noun <- [1..99], verb <- [1..99]]
      let outputs = map (getOutput . run . (setInput program)) inputCombinations
      let inputsOutputs = zip inputCombinations outputs :: [((Int,Int), Int)]
-     
+
      let solution = case (find (\x -> snd(x) == 19690720) inputsOutputs) of
                     Just((noun,verb), output) -> show (100*noun + verb)
-                    Nothing -> "Error"
-     
+                    Nothing                   -> "Error"
+
      putStrLn $ solution

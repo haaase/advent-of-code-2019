@@ -1,7 +1,7 @@
 {-# LANGUAGE DataKinds #-}
-import  Data.Sequence
 import           Data.List.Split
-import qualified Data.Text as T
+import           Data.Sequence
+import qualified Data.Text       as T
 
 -- Day 2: Intcode Interpreter
 
@@ -9,7 +9,7 @@ import qualified Data.Text as T
 interp :: Seq Int -> Int -> Seq Int
 interp prog pc
     | opcd == 1 = interp(update arg3 (val1 + val2) prog) (pc + 4)
-    | opcd == 2 = interp(update arg3 (val1 * val2) prog) (pc + 4) 
+    | opcd == 2 = interp(update arg3 (val1 * val2) prog) (pc + 4)
     | otherwise = prog -- finish execution and return program
     where opcd = index prog pc :: Int
           arg1 = index prog (pc+1) :: Int
