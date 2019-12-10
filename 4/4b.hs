@@ -13,18 +13,24 @@
 --     223450 does not meet these criteria (decreasing pair of digits 50).
 --     123789 does not meet these criteria (no double).
 
-dig = [0..9]
+import Data.List
+
 lowerLimit = 197487
 upperLimit = 673251
 
-toNum :: [Int] -> Int
-toNum [a,b,c,d,e,f] = read $ (show a) ++ (show b) ++ (show c) ++ (show d) ++ (show e) ++ (show f)
-
-possiblePasswords = [[a] ++ [b] ++ [c] ++ [d] ++ [e] ++ [f] | a <- dig, b <-dig, c <- dig, d <- dig, e <- dig, f <- dig,
-    a <= b, b <= c, c <= d, d <= e, e <= f,
-    (a == b || b == c || c == d || d == e || e == f),
-    toNum [a,b,c,d,e,f] >= lowerLimit, toNum [a,b,c,d,e,f] <= upperLimit]
+increasing :: Int -> Bool
+increasing n = isInc s where
+    s = show n
+    isInc [] = True
+    isInc (a:[]) = True
+    isInc (a:xs@(b:_)) = (a <= b) && (isInc xs)
+        
+containsPair :: Int -> Bool
+containsPair n = 2 `elem` subSequenceCounts where
+    groups = group (show n)
+    subSequenceCounts = map length groups
 
 main = do
+    let possiblePasswords = filter (\x -> (increasing x) && (containsPair x))[lowerLimit..upperLimit]
     let solution = length possiblePasswords
     putStrLn $ show solution
